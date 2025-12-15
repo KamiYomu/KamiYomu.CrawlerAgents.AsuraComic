@@ -197,7 +197,7 @@ public class AsuraComicCrawlerAgent : AbstractCrawlerAgent, ICrawlerAgent, IDisp
         var coverFileName = Path.GetFileName(new Uri(coverUrl).AbsolutePath);
 
         // Title
-        var titleNode = divNode.SelectSingleNode(".//span[contains(@class,'font-bold')]");
+        var titleNode = divNode.SelectSingleNode(".//span[contains(@class,'block') and contains(@class,'font-bold')]");
         var title = titleNode?.InnerText.Trim() ?? "Unknown Title";
 
         // Chapter
@@ -223,8 +223,8 @@ public class AsuraComicCrawlerAgent : AbstractCrawlerAgent, ICrawlerAgent, IDisp
         // Id (derive from href slug)
         var id = Path.GetFileName(websiteUrl);
 
-        // Language (guess from genre, e.g., MANHWA → Korean)
-        var _language = genres.Contains("MANHWA") ? "Korean" : "Unknown";
+        
+        var _language = "en";
 
         var manga = MangaBuilder.Create()
             .WithId(id)
@@ -283,7 +283,7 @@ public class AsuraComicCrawlerAgent : AbstractCrawlerAgent, ICrawlerAgent, IDisp
         var coverFileName = Path.GetFileName(new Uri(coverUrl).AbsolutePath);
 
         // --- Title ---
-        var titleNode = rootNode.SelectSingleNode(".//span[contains(@class,'text-xl') and contains(@class,'font-bold')]");
+        var titleNode = rootNode.SelectSingleNode(".//div[contains(@class,'col-span-12') and contains(@class,'sm:col-span-9')]//span[contains(@class,'text-xl') and contains(@class,'font-bold')]");       
         var title = titleNode?.InnerText.Trim() ?? "Unknown Title";
 
         // --- Synopsis / Description ---
