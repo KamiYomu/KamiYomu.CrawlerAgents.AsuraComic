@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Title>KamiYomu Crawler Agent – asuracomic.net</Title>
+		<Description>A dedicated crawler agent for accessing public data from asuracomic.net. Built on KamiYomu.CrawlerAgents.Core, it enables efficient search, metadata extraction, and integration with the KamiYomu platform.</Description>
+		<Authors>KamiYomu</Authors>
+		<Owners>KamiYomu</Owners>
+		<PackageProjectUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaPark</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaPark</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>kamiyomu;kamiyomu-crawler-agents;manga-download;mangapark</PackageTags>
+		<PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+		<Copyright>© KamiYomu. Licensed under GPL-3.0.</Copyright>
+		<PackageIconUrl>https://raw.githubusercontent.com/KamiYomu/KamiYomu.CrawlerAgents.MangaPark/main/src/KamiYomu.CrawlerAgents.MangaPark/Resources/logo.png</PackageIconUrl>
+		<PackageIcon>Resources/logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="Resources\logo.png" Pack="true" PackagePath="Resources/" />
+		<None Include="..\..\README.md" Link="README.md" Pack="true" PackagePath="/" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<IncludeSymbols>True</IncludeSymbols>
+		<IncludeSource>True</IncludeSource>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="1.1.4" />
+		<PackageReference Include="Polly" Version="8.6.5" />
+	</ItemGroup>
+
+	<Import Project="KamiYomu.CrawlerAgents.AsuraComic.props" />
+
+</Project>

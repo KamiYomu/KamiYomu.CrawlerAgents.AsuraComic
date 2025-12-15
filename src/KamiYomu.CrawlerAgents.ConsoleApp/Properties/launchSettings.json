@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "KamiYomu.CrawlerAgents.ConsoleApp": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

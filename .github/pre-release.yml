@@ -1,0 +1,59 @@
+﻿name: KamiYomu Crawler Agents Pre-Release
+tag_name: ''
+target_commitish: main
+body: |
+  KamiYomu Crawler Agents Pre-Release
+
+  ## 🚀 Release
+
+  We’re excited to introduce the release of **KamiYomu.CrawlerAgents.Core**, a foundational library for building, extending, and integrating custom crawler agents within the KamiYomu ecosystem.  
+  It provides essential abstractions, utilities, and lifecycle hooks to streamline agent development and ensure seamless interoperability across the platform.
+
+  ## 🧰 Improvements
+
+  - Refactored ...
+  - Updated dependencies
+
+  ## 📦 Package Info
+
+  - Version: `vX.Y.Z`
+  - Commit: `{{ commit_sha }}`
+  - Date: `{{ date }}`
+
+  ## 📥 Installation
+
+  ### 🔹 From NuGet.org
+
+  ```bash
+  dotnet add package KamiYomu.CrawlerAgents.Core --version X.Y.Z
+  ```
+  ### 🔹 From GitHub Packages
+
+  Add to your NuGet.config sources:
+  ```xml
+    <configuration>
+      <packageSources>
+        <add key="github" value="https://nuget.pkg.github.com/KamiYomu/index.json" />
+      </packageSources>
+      <packageSourceCredentials>
+        <github>
+          <add key="Username" value="YOUR_GITHUB_USERNAME" />
+          <add key="ClearTextPassword" value="YOUR_GITHUB_TOKEN" />
+        </github>
+      </packageSourceCredentials>
+    </configuration>
+  ```
+
+  🔐 Replace YOUR_GITHUB_USERNAME and YOUR_GITHUB_TOKEN with your actual GitHub credentials or a fine-scoped personal access token
+
+  then install via:
+  ```bash
+  dotnet add package KamiYomu.CrawlerAgents.Core --version X.Y.Z --source "https://nuget.pkg.github.com/KamiYomu/index.json"
+  ```
+
+  or Using PackageReference
+  ```xml
+    <PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="X.Y.Z" />
+  ```
+draft: true
+prerelease: true
