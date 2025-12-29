@@ -12,13 +12,13 @@
 		<Description>A dedicated crawler agent for accessing public data from asuracomic.net. Built on KamiYomu.CrawlerAgents.Core, it enables efficient search, metadata extraction, and integration with the KamiYomu platform.</Description>
 		<Authors>KamiYomu</Authors>
 		<Owners>KamiYomu</Owners>
-		<PackageProjectUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaPark</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.MangaPark</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.AsuraComic</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.AsuraComic</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>kamiyomu;kamiyomu-crawler-agents;manga-download;mangapark</PackageTags>
-		<PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-		<Copyright>© KamiYomu. Licensed under GPL-3.0.</Copyright>
-		<PackageIconUrl>https://raw.githubusercontent.com/KamiYomu/KamiYomu.CrawlerAgents.MangaPark/main/src/KamiYomu.CrawlerAgents.MangaPark/Resources/logo.png</PackageIconUrl>
+		<PackageTags>kamiyomu;kamiyomu-crawler-agents;manga-download;asuracomic</PackageTags>
+		<PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+		<Copyright>© KamiYomu. Licensed under AGPL-3.0.</Copyright>
+		<PackageIconUrl>https://raw.githubusercontent.com/KamiYomu/KamiYomu.CrawlerAgents.AsuraComic/main/src/KamiYomu.CrawlerAgents.AsuraComic/Resources/logo.png</PackageIconUrl>
 		<PackageIcon>Resources/logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
