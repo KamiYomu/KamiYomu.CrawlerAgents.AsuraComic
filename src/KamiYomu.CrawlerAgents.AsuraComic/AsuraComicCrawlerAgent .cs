@@ -9,6 +9,7 @@ using KamiYomu.CrawlerAgents.Core;
 using KamiYomu.CrawlerAgents.Core.Catalog;
 using KamiYomu.CrawlerAgents.Core.Catalog.Builders;
 using KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
+using KamiYomu.CrawlerAgents.Core.Inputs;
 
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +20,10 @@ using Page = KamiYomu.CrawlerAgents.Core.Catalog.Page;
 namespace KamiYomu.CrawlerAgents.AsuraComic;
 
 [DisplayName("KamiYomu Crawler Agent – asuracomic.net")]
+[CrawlerSelect("Mirror", "AsuraComic offers multiple mirror sites that may be online and useful.",
+    true, 0, [
+        "https://asuracomic.net",
+    ])]
 public class AsuraComicCrawlerAgent : AbstractCrawlerAgent, ICrawlerAgent
 {
     private readonly Uri _baseUri;
@@ -28,9 +33,10 @@ public class AsuraComicCrawlerAgent : AbstractCrawlerAgent, ICrawlerAgent
 
     public AsuraComicCrawlerAgent(IDictionary<string, object> options) : base(options)
     {
-        _baseUri = new Uri("https://asuracomic.net");
         _browser = new Lazy<Task<IBrowser>>(CreateBrowserAsync, true);
         _timezone = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "Eastern Standard Time" : "America/Toronto";
+        string mirrorUrl = Options.TryGetValue("Mirror", out object? mirror) && mirror is string mirrorValue ? mirrorValue : "https://asuracomic.net";
+        _baseUri = new Uri(mirrorUrl);
     }
 
     protected virtual async Task DisposeAsync(bool disposing)
