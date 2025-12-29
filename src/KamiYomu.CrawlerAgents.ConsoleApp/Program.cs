@@ -1,33 +1,35 @@
-﻿using KamiYomu.CrawlerAgents.AsuraComic;
+using KamiYomu.CrawlerAgents.AsuraComic;
 using KamiYomu.CrawlerAgents.Core;
 using KamiYomu.CrawlerAgents.Core.Catalog;
+
 using Microsoft.Extensions.Logging;
+
 using Spectre.Console;
 
 #region startup
 AnsiConsole.MarkupLine("[bold underline green]KamiYomu AgentCrawler Validator[/]\n");
-using var loggerFactory = LoggerFactory.Create(builder =>
+using ILoggerFactory loggerFactory = LoggerFactory.Create(static builder =>
 {
-    builder.AddConsole(); 
+    _ = builder.AddConsole();
 });
 
 ILogger logger = loggerFactory.CreateLogger<Program>();
 
-var options = new Dictionary<string, object>()
+Dictionary<string, object> options = new()
 {
     { CrawlerAgentSettings.DefaultInputs.KamiYomuILogger, logger }
 };
 ICrawlerAgent crawler = new AsuraComicCrawlerAgent(options);
-var results = new List<(string Method, bool Success, string Message)>();
+List<(string Method, bool Success, string Message)> results = [];
 
-var mangaResult = await crawler.SearchAsync("dragon", new PaginationOptions(1, 30), CancellationToken.None);
+PagedResult<Manga> mangaResult = await crawler.SearchAsync("dragon", new PaginationOptions(1, 30), CancellationToken.None);
 #endregion
 
 #region Test GetFaviconAsync
 try
 {
     AnsiConsole.MarkupLine($"[bold underline green] Start Testing the method {nameof(ICrawlerAgent.GetFaviconAsync)}... [/]\n");
-    var favicon = await crawler.GetFaviconAsync(CancellationToken.None);
+    Uri? favicon = await crawler.GetFaviconAsync(CancellationToken.None);
     results.Add((nameof(ICrawlerAgent.GetFaviconAsync), favicon != null && favicon.IsAbsoluteUri, favicon?.ToString() ?? "Returned null"));
 }
 catch (Exception ex)
@@ -41,7 +43,7 @@ try
 {
     AnsiConsole.MarkupLine($"[bold underline green] Start Testing the method {nameof(ICrawlerAgent.SearchAsync)}... [/]\n");
     Thread.Sleep(1000);
-    var count = mangaResult.Data?.Count() ?? 0;
+    int count = mangaResult.Data?.Count() ?? 0;
     results.Add((nameof(ICrawlerAgent.SearchAsync), count > 0, $"Returned {count} result(s)"));
     results.Add(($"{nameof(Manga.Id)} is not empty", !string.IsNullOrWhiteSpace(mangaResult.Data.ElementAt(0).Id), $"{mangaResult.Data.ElementAt(0).Id}"));
     results.Add(($"{nameof(Manga.Title)} is not empty", !string.IsNullOrWhiteSpace(mangaResult.Data.ElementAt(0).Title), $"{mangaResult.Data.ElementAt(0).Title}"));
@@ -62,8 +64,8 @@ try
 {
     AnsiConsole.MarkupLine($"[bold underline green] Start Testing the method {nameof(ICrawlerAgent.GetByIdAsync)}... [/]\n");
     Thread.Sleep(1000);
-    var manga = await crawler.GetByIdAsync(mangaResult.Data.ElementAt(0)?.Id, CancellationToken.None);
-    var any = mangaResult.Data?.Any() ?? false;
+    Manga manga = await crawler.GetByIdAsync(mangaResult.Data.ElementAt(0)?.Id, CancellationToken.None);
+    bool any = mangaResult.Data?.Any() ?? false;
     results.Add((nameof(ICrawlerAgent.GetByIdAsync), any, $"Returning {manga.Title} and its cover {manga.CoverUrl}."));
     results.Add(($"{nameof(Manga.Id)} is not empty", !string.IsNullOrWhiteSpace(manga.Id), $"{manga.Id}"));
     results.Add(($"{nameof(Manga.Title)} is not empty", !string.IsNullOrWhiteSpace(manga.Title), $"{manga.Title}"));
@@ -83,14 +85,14 @@ try
 {
     AnsiConsole.MarkupLine($"[bold underline green] Start Testing the method {nameof(ICrawlerAgent.GetChaptersAsync)}... [/]\n");
     Thread.Sleep(1000);
-    var chaptersResult = await crawler.GetChaptersAsync(mangaResult.Data.First(), new PaginationOptions(0, 300, 300), CancellationToken.None);
-    var count = chaptersResult?.Data.Count() ?? 0;
-    var allNumbers = chaptersResult.Data?
-    .Select(c => c.Number)
-    .OrderByDescending(p => p)
+    PagedResult<Chapter>? chaptersResult = await crawler.GetChaptersAsync(mangaResult.Data.First(), new PaginationOptions(0, 300, 300), CancellationToken.None);
+    int count = chaptersResult?.Data.Count() ?? 0;
+    List<decimal>? allNumbers = chaptersResult.Data?
+    .Select(static c => c.Number)
+    .OrderByDescending(static p => p)
     .ToList();
 
-    var numbersString = allNumbers != null ? string.Join(";", allNumbers) : string.Empty;
+    string numbersString = allNumbers != null ? string.Join(";", allNumbers) : string.Empty;
     results.Add((nameof(ICrawlerAgent.GetChaptersAsync), !string.IsNullOrWhiteSpace(chaptersResult?.Data.FirstOrDefault()?.Id), $"Returned {chaptersResult?.Data.FirstOrDefault()?.Id} result(s)"));
     results.Add(($"{nameof(Chapter.Id)} is not empty", !string.IsNullOrWhiteSpace(chaptersResult.Data?.FirstOrDefault().Id), $"{chaptersResult.Data?.FirstOrDefault().Id}"));
     results.Add(($"{nameof(Chapter.Title)} is not empty", !string.IsNullOrWhiteSpace(chaptersResult?.Data?.FirstOrDefault().Title), $"{chaptersResult?.Data?.FirstOrDefault().Title}"));
@@ -110,13 +112,13 @@ try
 {
     AnsiConsole.MarkupLine($"[bold underline green] Start Testing the method {nameof(HttpClient.GetByteArrayAsync)}... [/]\n");
     Thread.Sleep(1000);
-    var chaptersResult = await crawler.GetChaptersAsync(mangaResult.Data.First(), new PaginationOptions(0, 10), CancellationToken.None);
+    PagedResult<Chapter> chaptersResult = await crawler.GetChaptersAsync(mangaResult.Data.First(), new PaginationOptions(0, 10), CancellationToken.None);
     Thread.Sleep(1000);
-    var chapterImages = await crawler.GetChapterPagesAsync(chaptersResult.Data.Last(), CancellationToken.None);
+    IEnumerable<Page> chapterImages = await crawler.GetChapterPagesAsync(chaptersResult.Data.Last(), CancellationToken.None);
 
-    using var httpClient = new HttpClient();
+    using HttpClient httpClient = new();
     httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(CrawlerAgentSettings.HttpUserAgent);
-    var imageBytes = await httpClient.GetByteArrayAsync(chapterImages.ElementAt(0).ImageUrl);
+    byte[] imageBytes = await httpClient.GetByteArrayAsync(chapterImages.ElementAt(0).ImageUrl);
     results.Add(($"{nameof(Chapter.Uri)} is not empty", !string.IsNullOrWhiteSpace(chaptersResult.Data?.FirstOrDefault().Uri.ToString()), $"{chaptersResult.Data?.FirstOrDefault().Uri}"));
     results.Add(($"Count is not empty", chapterImages.Any(), $"{chapterImages.Count()}"));
     results.Add((nameof(HttpClient.GetByteArrayAsync), chapterImages.Any(), $"Returned {imageBytes.Count()} bytes as result(s)"));
@@ -128,16 +130,16 @@ catch (Exception ex)
 #endregion
 
 #region Display results
-var table = new Table()
+Table table = new Table()
     .Title("[yellow]Test Results[/]")
     .Border(TableBorder.Rounded)
     .AddColumn("Method")
     .AddColumn("Status")
     .AddColumn("Message");
 
-foreach (var (method, success, message) in results)
+foreach ((string method, bool success, string message) in results)
 {
-    table.AddRow(
+    _ = table.AddRow(
         $"[bold]{method}[/]",
         success ? "[green]✔ Passed[/]" : "[red]✘ Failed[/]",
          Markup.Escape(message)

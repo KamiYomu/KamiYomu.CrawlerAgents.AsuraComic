@@ -5,6 +5,11 @@ on:
     branches:
       - 'releases/**'
 
+permissions:
+  contents: write
+  actions: write
+  packages: write
+
 jobs:
   build:
     name: Build, Test, Pack
@@ -142,3 +147,10 @@ jobs:
             --api-key "${{ secrets.GH_KAMIYOMU_NUGETORG_PACKAGE_PUBLISHER }}" \
             --source "https://api.nuget.org/v3/index.json" \
             --skip-duplicate
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.build.outputs.tag }}
+          name: Release ${{ needs.build.outputs.tag }}
+          prerelease: ${{ needs.build.outputs.is_prerelease || false }}
