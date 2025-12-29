@@ -17,7 +17,8 @@ ILogger logger = loggerFactory.CreateLogger<Program>();
 
 Dictionary<string, object> options = new()
 {
-    { CrawlerAgentSettings.DefaultInputs.KamiYomuILogger, logger }
+    { CrawlerAgentSettings.DefaultInputs.KamiYomuILogger, logger },
+    { "Mirror", "https://asuracomic.net" }
 };
 ICrawlerAgent crawler = new AsuraComicCrawlerAgent(options);
 List<(string Method, bool Success, string Message)> results = [];
